@@ -3,3 +3,6 @@ phpunit.xml
 tests/_output
 tests/_output/*
 tests/_db.php
+.idea
+/*.iml
+composer.lock
