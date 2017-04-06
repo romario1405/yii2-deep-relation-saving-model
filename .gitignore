@@ -1,0 +1,5 @@
+vendor/
+phpunit.xml
+tests/_output
+tests/_output/*
+tests/_db.php
