@@ -3,15 +3,23 @@
   "require": {
     "php": ">=7",
     "yiisoft/yii2": "2.*",
-    "unclead/yii2-multiple-input": "2.*",
-    "yiisoft/yii2-bootstrap": "^2.0"
+    "bower-asset/jquery.repeater": "1.2.1",
+    "bower-asset/ckeditor": "4.6.2",
+    "bower-asset/jquery-colorpicker": "1.0.2",
+    "bower-asset/moment": "2.18.1",
+    "bower-asset/bootstrap-daterangepicker": "2.1.25",
+    "bower-asset/tinymce": "4.6.2",
+    "bower-asset/jquery-bar-rating": "1.2.2",
+    "bower-asset/select2": "4.0.3",
+    "bower-asset/eonasdan-bootstrap-datetimepicker": "4.17.47",
+    "yiisoft/yii2-imagine": "2.*"
   },
   "require-dev": {
-    "codeception/base": "2.*",
     "codeception/verify": "~0.3.3",
     "codeception/specify": "~0.4.6",
-    "codeception/codeception": "^2.2.10"
+    "codeception/codeception": "^2.2"
   },
+  "optimize-autoloader": true,
   "authors": [
     {
       "name": "Doniy Serhey",
@@ -20,22 +28,177 @@
   ],
   "autoload": {
     "psr-4": {
-      "sonrac\\relations\\": "src/"
+      "sonrac\\relations\\": "src/",
+      "sonrac\\tabularWidgets\\": "src/widgets/tabularWidgets/"
     }
   },
-
-  "extra": {
-    "asset-installer-paths": {
-      "npm-asset-library": "vendor/npm",
-      "bower-asset-library": "vendor/bower"
-    },
-    "asset-vcs-driver-options": {
-      "github-no-api": true
-    },
-    "asset-registry-options": {
-      "npm-searchable": false,
-      "bower-searchable": false
-    },
-    "asset-pattern-skip-version": "(-build|-patch)"
+  "config": {
+    "fxp-asset": {
+      "ignore-files": {
+        "bower-asset/select2": [
+          "*.md",
+          "Gruntfile.js",
+          "*.json",
+          "*.yml",
+          ".*",
+          "docs/",
+          "src/",
+          "tests/",
+          "vendor/",
+          "select2.js",
+          "select2.min.js",
+          "select2.full.min.js",
+          "select2.css"
+        ],
+        "bower-asset/jquery-bar-rating": [
+          ".*",
+          "*.json",
+          "gulpfile.js",
+          "*.md",
+          "*.json",
+          "karma.conf.js",
+          "*.txt",
+          "jquery.barrating.js",
+          "themes",
+          "examples",
+          "test"
+        ],
+        "bower-asset/tinymce": [
+          "*.json",
+          "*.txt",
+          ".*",
+          "jquery.tinymce.js",
+          "tinymce.jquery.*",
+          "tinymce.js"
+        ],
+        "bower-asset/moment": [
+          "benchmarks",
+          "meteor",
+          "src",
+          ".*",
+          "*.md",
+          "LICENSE",
+          "*.json",
+          "ender.js",
+          "*.ts",
+          "package.js",
+          "*.nuspec",
+          "Gruntfile.js"
+        ],
+        "bower-asset/eonasdan-bootstrap-datetimepicker": [
+          "docs",
+          "src",
+          "tasks",
+          "test",
+          ".*",
+          "*.json",
+          "*.md",
+          "LICENSE",
+          "daterangepicker.scss",
+          "Gruntfile.js",
+          "*.yml"
+        ],
+        "bower-asset/bootstrap-daterangepicker": [
+          "example",
+          "demo",
+          "test",
+          "daterangepicker.scss",
+          "grunt.js",
+          "unitTests",
+          "website",
+          ".*",
+          "*.MD",
+          "*.md",
+          "*.json",
+          "*.html",
+          "*.png",
+          "moment.js",
+          "package.js",
+          "moment.min.js"
+        ],
+        "bower-asset/jquery-colorpicker": [
+          "*.json",
+          "demo",
+          "LICENSE",
+          "*LICENSE*",
+          "*.md"
+        ],
+        "bower-asset/ckeditor": [
+          ".*",
+          "*.md",
+          "*.MD",
+          "adapters",
+          "samples",
+          "*.json"
+        ],
+        "bower-asset/jquery": [
+          ".*",
+          "*.md",
+          "*.MD",
+          "bower.json",
+          "external",
+          "src",
+          "*.txt",
+          "package.json"
+        ],
+        "bower-asset/jquery.inputmask": [
+          ".*",
+          "*.md",
+          "*.MD",
+          "*.json",
+          "Gruntfile.js",
+          "nuspecs",
+          "*.html",
+          "index.js",
+          "karma*",
+          "js/*",
+          "qunit",
+          "*.txt",
+          "webpack*",
+          "*.json",
+          "bower.json",
+          "dist/inputmask"
+        ],
+        "bower-asset/jquery.repeater": [
+          ".*",
+          "*.md",
+          "*.MD",
+          "src",
+          "*.html",
+          "gruntfile.js",
+          "jquery-*",
+          "*.json",
+          "*.php",
+          "package.json",
+          "test"
+        ],
+        "bower-asset/punycode": [
+          ".*",
+          "*.md",
+          "*.MD",
+          "test",
+          "tests",
+          "samples",
+          "examples",
+          "example",
+          "src",
+          "*.json",
+          "*.txt"
+        ]
+      },
+      "optimize-with-installed-packages": true,
+      "installer-paths": {
+        "npm-asset-library": "vendor/npm",
+        "bower-asset-library": "vendor/bower"
+      },
+      "pattern-skip-version": "(-build|-patch|-patch1)",
+      "registry-options": {
+        "npm-searchable": false,
+        "bower-searchable": false
+      },
+      "vcs-driver-options": {
+        "github-no-api": true
+      }
+    }
   }
 }

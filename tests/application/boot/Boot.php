@@ -24,6 +24,7 @@ class Boot implements BootstrapInterface
      */
     public function bootstrap($app)
     {
+        \Yii::setAlias('@sonracRelations', __DIR__ . '/../../../src');
         ob_start();
         $migration = new CreateTestTables();
         $migration->up();

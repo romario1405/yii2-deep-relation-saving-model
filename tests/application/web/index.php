@@ -8,9 +8,10 @@ $config = require(__DIR__ . '/../../acceptance/_config.php');
 $additional = [
     'components' => [
         'request' => [
-            'cookieValidationKey' => 'asdasdasdasd',
+            'cookieValidationKey' => 'sdfogjsldfk.gjlksdfjglsdfjglsdfjg;lsdfj',
+
         ],
     ]
 ];
 $loader->setPsr4('sonrac\\relations\\tests\\', __DIR__ . '/../../');
-(new yii\web\Application(\yii\helpers\ArrayHelper::merge($additional, $config)))->run();
+(new yii\web\Application(\yii\helpers\ArrayHelper::merge($config, $additional)))->run();

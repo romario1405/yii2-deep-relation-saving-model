@@ -1,0 +1,5 @@
+*.html
+node_modules/
+build/js/main.min.js
+build/js/main.js
+build/plugins

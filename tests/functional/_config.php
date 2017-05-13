@@ -7,17 +7,18 @@
  */
 
 Yii::setAlias('@bower', __DIR__ . '/../../vendor/bower-asset');
-
-return [
+$config = [
     'id'                  => 'test',
-    'basePath'            => __DIR__ . '/../../tests/application',
-    'runtimePath'         => __DIR__ . '/../../tests/_output',
+    'basePath'            => __DIR__ . '/../application',
+    'runtimePath'         => __DIR__ . '/../_output',
     'vendorPath'          => __DIR__ . '/../../vendor',
     'components'          => [
         'db'      => require __DIR__ . '/../_db.php',
         'request' => [
-            'cookieValidationKey' => 'asdasdasd',
+            'cookieValidationKey' => 'tesfsdlkjdslgzhdfkljslkdfjslfjlksdf',
         ],
     ],
     'controllerNamespace' => 'sonrac\relations\tests\application\controllers',
 ];
+
+return $config;

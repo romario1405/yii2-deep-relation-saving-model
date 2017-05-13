@@ -9,3 +9,6 @@ modules:
     enabled:
         # add framework module here
         - \Helper\Functional
+        - Filesystem
+        - Yii2:
+              configFile: 'tests/functional/_config.php'

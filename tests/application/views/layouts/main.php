@@ -2,7 +2,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 use yii\helpers\Html;
-use yii\bootstrap\BootstrapAsset;
+use sonrac\relations\tests\application\assets\BootstrapAsset;
 BootstrapAsset::register($this);
 ?>
 <?php $this->beginPage() ?>

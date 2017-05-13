@@ -1,8 +1,15 @@
 vendor/
-phpunit.xml
 tests/_output
 tests/_output/*
+!tests/_output/.gitignore
 tests/_db.php
 .idea
 /*.iml
+src/assets/tabular/src/js/*.min.js
 composer.lock
+bower_components/
+node_modules/
+.gitignore
+!.gitignore
+bower.json
+tests/functional/widgets/

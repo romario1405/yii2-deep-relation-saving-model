@@ -17,18 +17,17 @@ namespace sonrac\relations;
 class Stack implements IStack
 {
     /**
-     * Stack
-     *
-     * @var array
-     */
-    private $stack;
-
-    /**
      * Limit elements. If is null - unlimited
      *
      * @var int
      */
     protected $limit;
+    /**
+     * Stack
+     *
+     * @var array
+     */
+    private $stack;
 
     /**
      * Stack constructor.
@@ -71,16 +70,16 @@ class Stack implements IStack
     /**
      * @inheritdoc
      */
-    public function top()
+    public function isEmpty()
     {
-        return current($this->stack);
+        return empty($this->stack);
     }
 
     /**
      * @inheritdoc
      */
-    public function isEmpty()
+    public function top()
     {
-        return empty($this->stack);
+        return current($this->stack);
     }
 }

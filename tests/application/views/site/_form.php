@@ -13,27 +13,61 @@
  * @var \sonrac\relations\tests\application\models\Tags               $tags
  * @var \sonrac\relations\tests\application\models\ArticleAttachments $attachments
  */
-use yii\bootstrap\ActiveForm;
-use sonrac\relations\tests\application\models\ArticleTranslates;
-use sonrac\relations\tests\application\models\ArticleAttachments;
-use sonrac\relations\tests\application\models\ArticleTags;
-use unclead\multipleinput\TabularInput;
+use sonrac\relations\widgets\TabularRelation;
+use yii\widgets\ActiveForm;
 
-$translates  = count($model->articleTranslates) ? $model->articleTranslates : [new ArticleTranslates()];
-$attachments = $model->articleAttachments ?? [new ArticleAttachments()];
-$tags        = $model->articleTags ?? [new ArticleTags()];
+$form = ActiveForm::begin([]);
 
-
-$form = ActiveForm::begin();
-
-echo TabularInput::widget([
-    'models' => $translates
+echo $form->field($model, 'articleTranslates')->widget(TabularRelation::class, [
+    'columns'             => [
+        [
+            'attribute'      => 'title',
+            'wrapperOptions' => [
+                'options' => [
+                    'class' => 'col-md-2',
+                ],
+            ],
+        ],
+        [
+            'attribute'      => 'article_id',
+            'label'          => false,
+            'wrapperOptions' => [
+                'options' => [
+                    'class' => 'hide left',
+                ],
+            ],
+        ],
+        [
+            'attribute'      => 'slug',
+            'wrapperOptions' => [
+                'options' => [
+                    'class' => 'col-md-2',
+                ],
+            ],
+        ],
+        [
+            'attribute'      => 'body',
+            'wrapperOptions' => [
+                'options' => [
+                    'class' => 'col-md-2',
+                ],
+            ],
+        ],
+        [
+            'attribute'      => 'language',
+            'wrapperOptions' => [
+                'options' => [
+                    'class' => 'col-md-2',
+                ],
+            ],
+        ],
+    ],
+    'headerTemplate'      => '<div class=\'col-md-2\'>{label}</div>',
+    'repeaterItemOptions' => [
+        'class' => 'repeater-item',
+    ],
+    'form'                => $form,
+    'min'                 => 2,
 ]);
 
-foreach ($translates as $index => $translate) {
-    echo $form->field($translate, "title", [
-        'inputOptions' => ['name' => "[$index][title]"]
-    ]);
-}
-
-ActiveForm::end();
+$form->end();

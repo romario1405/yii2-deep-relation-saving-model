@@ -1,0 +1,33 @@
+body {
+    background-color: #3C3F41;
+    color: white;
+}
+
+.repeater-box {
+    border: 2px solid #1d1cab;
+}
+
+.repeater-box .repeater-box-title {
+    font-weight: bold;
+    font-size: 20px;
+    min-height: 50px;
+    text-align: center;
+}
+
+.repeater-box .repeater-box-title .add-button {
+    font-size: 14px;
+    float: right;
+}
+
+.repeater-box .repeater-item {
+    border: 1px dashed gray;
+    margin: 5px 10px;
+}
+
+.left {
+    float: left;
+}
+
+.margin-30 {
+    margin: 25px 0 0 15px;
+}

@@ -44,21 +44,32 @@ trait TRelation
      * @var array
      */
     public $relationDeleteErrors = [];
-
-    /**
-     * Last relation query
-     *
-     * @var \yii\db\ActiveQuery
-     */
-    protected $_lastQuery;
-
     /**
      * List of validate model function which calling instead validate if method exist in model
      *
      * @var array
      */
     public $validateMethods = ['tValidate'];
-
+    /**
+     * If true - changed scenario for all relations which are loaded
+     *
+     * @var bool
+     */
+    public $changeRelationsScenario = true;
+    /**
+     * All models errors
+     *
+     * @var array
+     *
+     * @author Doniy Serhey <doniysa@gmail.com>
+     */
+    public $stackErrors = [];
+    /**
+     * Last relation query
+     *
+     * @var \yii\db\ActiveQuery
+     */
+    protected $_lastQuery;
     /**
      * Skip methods list from \yii\db\ActiveRecord
      *
@@ -72,14 +83,6 @@ trait TRelation
             'getAttributeLabel', 'getAttributeHint', 'getAttribute', 'getAttributes', 'getOldAttributes',
             'getOldAttribute', 'getDirtyAttributes', 'getIsNewRecord',
         ];
-
-    /**
-     * If true - changed scenario for all relations which are loaded
-     *
-     * @var bool
-     */
-    public $changeRelationsScenario = true;
-
     /**
      * Saving primary keys. Be cleaning after and before saveAll
      * Format:
@@ -95,22 +98,12 @@ trait TRelation
      * @var array
      */
     private $existingPKS = [];
-
     /**
      * Link relation attribute
      *
      * @var array
      */
     private $linkAttributes = [];
-
-    /**
-     * All models errors
-     *
-     * @var array
-     *
-     * @author Doniy Serhey <doniysa@gmail.com>
-     */
-    public $stackErrors = [];
 
     /**
      * Saves the current record with all relations
@@ -164,6 +157,52 @@ trait TRelation
     }
 
     /**
+     * Save new model or update if exists
+     *
+     * @param bool                 $runValidation  whether to perform validation (calling [[validate()]])
+     *                                             before saving the record. Defaults to `true`. If the validation
+     *                                             fails, the record will not be saved to the database and this method
+     *                                             will return `false`.
+     * @param array                $attributeNames list of attribute names that need to be saved. Defaults to null,
+     *                                             meaning all attributes that are loaded from DB will be saved.
+     *
+     * @param \yii\db\ActiveRecord $model          Model for save
+     *
+     * @return bool
+     */
+    protected function saveModel($runValidation, &$attributeNames, &$model)
+    {
+        $result = true;
+        if ($model->isNewRecord || count($model->dirtyAttributes)) {
+            $result = $model->isNewRecord ? $model->save($runValidation, $attributeNames) : $model->update($runValidation, $attributeNames);
+            if (count($model->errors)) {
+                $this->stackErrors[] = [
+                    'class'  => $model->class,
+                    'errors' => $model->errors,
+                ];
+            }
+        }
+
+        /** @var \yii\db\ActiveRecord|string $class */
+        $class = $model::className();
+        if (!isset($this->existingPKS[$class])) {
+            $this->existingPKS[$class] = [];
+        }
+
+        $pks = [];
+
+        foreach ($class::primaryKey() as $field) {
+            $pks[$field] = $model->{$field};
+        }
+
+        if (!in_array($pks, $this->existingPKS[$class])) {
+            $this->existingPKS[$class][] = $pks;
+        }
+
+        return (is_bool($result) ? $result : is_numeric($result));
+    }
+
+    /**
      * Recursion save model with all relations
      *
      * @param \yii\db\ActiveRecord $model          Model save
@@ -214,7 +253,7 @@ trait TRelation
         if ($currentRetry > $maxRetry) {
             return;
         }
-        $notDeletedQueries        = $notDeletedQueries ?? $this->existingPKS;
+        $notDeletedQueries = $notDeletedQueries ?? $this->existingPKS;
         $notDeletedQueriesCurrent = [];
         if (count($notDeletedQueries)) {
             foreach ($notDeletedQueries as $class => $pks) {
@@ -230,7 +269,7 @@ trait TRelation
 
                 try {
                     $class::getDb()->createCommand()
-                          ->delete($class::tableName(), $condition)->execute();
+                        ->delete($class::tableName(), $condition)->execute();
                 } catch (\Exception $exception) {
                     if (!isset($notDeletedQueriesCurrent[$class])) {
                         $notDeletedQueriesCurrent[$class] = [];
@@ -244,52 +283,6 @@ trait TRelation
         if (count($notDeletedQueriesCurrent)) {
             $this->dropNotSavedData($notDeletedQueriesCurrent, ++$currentRetry);
         }
-    }
-
-    /**
-     * Save new model or update if exists
-     *
-     * @param bool                 $runValidation  whether to perform validation (calling [[validate()]])
-     *                                             before saving the record. Defaults to `true`. If the validation
-     *                                             fails, the record will not be saved to the database and this method
-     *                                             will return `false`.
-     * @param array                $attributeNames list of attribute names that need to be saved. Defaults to null,
-     *                                             meaning all attributes that are loaded from DB will be saved.
-     *
-     * @param \yii\db\ActiveRecord $model          Model for save
-     *
-     * @return bool
-     */
-    protected function saveModel($runValidation, &$attributeNames, &$model)
-    {
-        $result = true;
-        if ($model->isNewRecord || count($model->dirtyAttributes)) {
-            $result = $model->isNewRecord ? $model->save($runValidation, $attributeNames) : $model->update($runValidation, $attributeNames);
-            if (count($model->errors)) {
-                $this->stackErrors[] = [
-                    'class'  => $model->class,
-                    'errors' => $model->errors,
-                ];
-            }
-        }
-
-        /** @var \yii\db\ActiveRecord|string $class */
-        $class = $model::className();
-        if (!isset($this->existingPKS[$class])) {
-            $this->existingPKS[$class] = [];
-        }
-
-        $pks = [];
-
-        foreach ($class::primaryKey() as $field) {
-            $pks[$field] = $model->{$field};
-        }
-
-        if (!in_array($pks, $this->existingPKS[$class])) {
-            $this->existingPKS[$class][] = $pks;
-        }
-
-        return (is_bool($result) ? $result : is_numeric($result));
     }
 
     /**
@@ -364,7 +357,7 @@ trait TRelation
 
         /** @var string|\yii\db\ActiveRecord $class */
         $class = $relation->modelClass;
-        $pks   = $class::primaryKey();
+        $pks = $class::primaryKey();
 
         /** @var array $linkAttributes */
         $linkAttributes = $this->generateLinkAttributesForModel($context, $relation->link);
@@ -398,6 +391,133 @@ trait TRelation
         }
 
         $context->populateRelation($relationName, $newModels);
+
+        return true;
+    }
+
+    /**
+     * Check exists relation
+     *
+     * @param string                    $name    Relation name
+     * @param null|\yii\db\ActiveRecord $context Context find
+     *
+     * @return bool|\yii\db\ActiveQuery
+     */
+    public function checkRelationExist(string $name, $context = null)
+    {
+        /** @var \yii\db\ActiveRecord $context */
+        /** @var \yii\db\ActiveRecord $this */
+        $context = $context ?? $this;
+
+        $method = 'get' . ucfirst($name);
+
+        if (!method_exists($context, $method) || $this->checkInSkip($name)) {
+            return false;
+        }
+
+        try {
+            $query = $context->$method();
+
+            if ($query instanceof \yii\db\ActiveQuery) {
+                return $query;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+        }
+
+        return false;
+    }
+
+    /**
+     * Check skip relations
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function checkInSkip(string $name)
+    {
+        $method = 'get' . ucfirst($name);
+        if (in_array($method, $this->skipMethods) || in_array($method, $this->_skipMethods)) {
+            return true;
+        }
+
+        $_name = [ucfirst($name), lcfirst($name)];
+
+        foreach ($_name as $item) {
+            if (in_array($item, $this->_skipMethods) || in_array($item, $this->skipRelations)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Generate link
+     *
+     * @param \yii\db\ActiveRecord $model Base model
+     * @param array                $link  Link attributes
+     *
+     * @return array
+     */
+    public function generateLinkAttributesForModel(\yii\db\ActiveRecord $model, array $link)
+    {
+        if ($model->isNewRecord) {
+            return [];
+        }
+
+        $attributes = [];
+
+        foreach ($link as $relModelAttribute => $modelAttribute) {
+            $attributes[$relModelAttribute] = $model->{$modelAttribute};
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Find existing record by primary key
+     *
+     * @param \yii\db\ActiveRecord|\yii\db\ActiveRecord[] $relations
+     * @param array                                       $primaryKey     Primary key find
+     * @param array                                       $linkAttributes Link model attributes
+     *
+     * @return bool|\yii\db\ActiveRecord
+     */
+    protected function findExistRecordInRelation(&$relations, array $primaryKey, array $linkAttributes)
+    {
+        if (is_array($relations)) {
+            foreach ($relations as $relation) {
+                if ($this->checkPrimaryKey($relation->attributes, $primaryKey) && $this->checkPrimaryKey($relation->attributes, $linkAttributes)) {
+                    return $relation;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check exists and define primary key
+     *
+     * @param array $attributes Model attributes
+     * @param array $primaryKey Primary key
+     *
+     * @return bool
+     */
+    protected function checkPrimaryKey(array $attributes, array $primaryKey)
+    {
+        if (!count($attributes) || !count($primaryKey)) {
+            return false;
+        }
+
+        foreach ($primaryKey as $name => $value) {
+            if (!isset($attributes[$name]) || !(isset($attributes[$name]) && $attributes[$name] == $value)) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -462,130 +582,48 @@ trait TRelation
     }
 
     /**
-     * Generate link
+     * Delete all with relation data
      *
-     * @param \yii\db\ActiveRecord $model Base model
-     * @param array                $link  Link attributes
-     *
-     * @return array
+     * @author Doniy Serhey <doniysa@gmail.com>
      */
-    public function generateLinkAttributesForModel(\yii\db\ActiveRecord $model, array $link)
+    public function rDeleteAll()
     {
-        if ($model->isNewRecord) {
-            return [];
-        }
+        /** Clear previous errors */
+        $this->relationDeleteErrors = [];
 
-        $attributes = [];
+        /** @var \yii\db\ActiveRecord $result */
+        /** @var \yii\db\ActiveRecord $this */
+        $result = true;
 
-        foreach ($link as $relModelAttribute => $modelAttribute) {
-            $attributes[$relModelAttribute] = $model->{$modelAttribute};
-        }
+        /** @var Connection $connection */
+        $connection = static::getDb();
+        /** @var \yii\db\Transaction $transaction */
+        $transaction = $connection->beginTransaction();
+        $stack = new Stack();
 
-        return $attributes;
-    }
+        $stack = $this->deepModelsCircumventing($stack, $this);
 
-    /**
-     * Check exists and define primary key
-     *
-     * @param array $attributes Model attributes
-     * @param array $primaryKey Primary key
-     *
-     * @return bool
-     */
-    protected function checkPrimaryKey(array $attributes, array $primaryKey)
-    {
-        if (!count($attributes) || !count($primaryKey)) {
-            return false;
-        }
+        while (!$stack->isEmpty()) { // Drop all models in stack
+            /** @var $elem \yii\db\ActiveRecord */
+            $elem = $stack->pop();
 
-        foreach ($primaryKey as $name => $value) {
-            if (!isset($attributes[$name]) || !(isset($attributes[$name]) && $attributes[$name] == $value)) {
+            try {
+                $result = $elem->delete() && $result;
+            } catch (\Exception $e) { // If error rollback transaction and return false
+                $this->relationDeleteErrors[] = $e->getMessage();
+                $transaction->rollBack();
+
                 return false;
             }
         }
 
-        return true;
-    }
-
-    /**
-     * Find existing record by primary key
-     *
-     * @param \yii\db\ActiveRecord|\yii\db\ActiveRecord[] $relations
-     * @param array                                       $primaryKey     Primary key find
-     * @param array                                       $linkAttributes Link model attributes
-     *
-     * @return bool|\yii\db\ActiveRecord
-     */
-    protected function findExistRecordInRelation(&$relations, array $primaryKey, array $linkAttributes)
-    {
-        if (is_array($relations)) {
-            foreach ($relations as $relation) {
-                if ($this->checkPrimaryKey($relation->attributes, $primaryKey) && $this->checkPrimaryKey($relation->attributes, $linkAttributes)) {
-                    return $relation;
-                }
-            }
+        if ($result) {
+            $transaction->commit();
+        } else {
+            $transaction->rollBack();
         }
 
-        return false;
-    }
-
-    /**
-     * Check skip relations
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    protected function checkInSkip(string $name)
-    {
-        $method = 'get' . ucfirst($name);
-        if (in_array($method, $this->skipMethods) || in_array($method, $this->_skipMethods)) {
-            return true;
-        }
-
-        $_name = [ucfirst($name), lcfirst($name)];
-
-        foreach ($_name as $item) {
-            if (in_array($item, $this->_skipMethods) || in_array($item, $this->skipRelations)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check exists relation
-     *
-     * @param string                    $name    Relation name
-     * @param null|\yii\db\ActiveRecord $context Context find
-     *
-     * @return bool|\yii\db\ActiveQuery
-     */
-    public function checkRelationExist(string $name, $context = null)
-    {
-        /** @var \yii\db\ActiveRecord $context */
-        /** @var \yii\db\ActiveRecord $this */
-        $context = $context ?? $this;
-
-        $method = 'get' . ucfirst($name);
-
-        if (!method_exists($context, $method) || $this->checkInSkip($name)) {
-            return false;
-        }
-
-        try {
-            $query = $context->$method();
-
-            if ($query instanceof \yii\db\ActiveQuery) {
-                return $query;
-            }
-
-            return false;
-        } catch (\Exception $exception) {
-        }
-
-        return false;
+        return $result;
     }
 
     /**
@@ -629,7 +667,7 @@ trait TRelation
     public function loadAllModelRelations(&$pContext = null)
     {
         /** @var \yii\db\ActiveRecord $pContext */
-        $pContext  = $pContext ?? $this;
+        $pContext = $pContext ?? $this;
         $reflector = new \ReflectionClass(get_class($pContext));
         foreach ($reflector->getMethods() AS $method) { // Scan all methods with reflection
             $params = $method->getNumberOfRequiredParameters();
@@ -655,50 +693,5 @@ trait TRelation
                 continue;
             }
         }
-    }
-
-    /**
-     * Delete all with relation data
-     *
-     * @author Doniy Serhey <doniysa@gmail.com>
-     */
-    public function rDeleteAll()
-    {
-        /** Clear previous errors */
-        $this->relationDeleteErrors = [];
-
-        /** @var \yii\db\ActiveRecord $result */
-        /** @var \yii\db\ActiveRecord $this */
-        $result = true;
-
-        /** @var Connection $connection */
-        $connection = static::getDb();
-        /** @var \yii\db\Transaction $transaction */
-        $transaction = $connection->beginTransaction();
-        $stack       = new Stack();
-
-        $stack = $this->deepModelsCircumventing($stack, $this);
-
-        while (!$stack->isEmpty()) { // Drop all models in stack
-            /** @var $elem \yii\db\ActiveRecord */
-            $elem = $stack->pop();
-
-            try {
-                $result = $elem->delete() && $result;
-            } catch (\Exception $e) { // If error rollback transaction and return false
-                $this->relationDeleteErrors[] = $e->getMessage();
-                $transaction->rollBack();
-
-                return false;
-            }
-        }
-
-        if ($result) {
-            $transaction->commit();
-        } else {
-            $transaction->rollBack();
-        }
-
-        return $result;
     }
 }

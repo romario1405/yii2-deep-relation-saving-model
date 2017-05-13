@@ -11,6 +11,8 @@ use yii\helpers\Html;
 
 echo Html::a('Create', ['/site/create'], ['class' => 'btn btn-success']);
 
+echo Html::a('CKEditor', ['/site/ck'], ['class' => 'btn btn-primary']);
+
 /**
  * @var $model        \sonrac\relations\tests\application\models\search\ArticleSearch
  * @var $dataProvider \yii\data\ActiveDataProvider

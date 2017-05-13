@@ -11,7 +11,7 @@ Yii::setAlias('@tests', __DIR__ . '/../');
 
 use sonrac\relations\tests\application\boot\Boot;
 
-return [
+$config = [
     'id'                  => 'test',
     'basePath'            => __DIR__ . '/../../tests/application',
     'runtimePath'         => __DIR__ . '/../../tests/_output',
@@ -19,6 +19,29 @@ return [
     'controllerNamespace' => 'sonrac\relations\tests\application\controllers',
     'vendorPath'          => __DIR__ . '/../../vendor',
     'components'          => [
-        'db' => require __DIR__ . '/../_db.php',
+        'urlManager'   => [
+            'showScriptName'      => false,
+            'enablePrettyUrl'     => true,
+            'enableStrictParsing' => false,
+        ],
+        'assetManager' => [
+            'linkAssets' => true,
+            'forceCopy'  => true,
+        ],
+        'db'           => require __DIR__ . '/../_db.php',
+        'request'      => [
+            'cookieValidationKey' => 'asdasdasd',
+        ],
+        'i18n'         => [
+            'translations' => [
+                'sonrac-relations' => [
+                    'class'          => 'yii\i18n\PhpMessageSource',
+                    'sourceLanguage' => 'en-US',
+                    'basePath'       => __DIR__ . '/../../src/messages',
+                ],
+            ],
+        ],
     ],
 ];
+
+return $config;

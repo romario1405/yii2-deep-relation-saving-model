@@ -30,8 +30,8 @@ class Queue extends Stack
      */
     public function __construct($limit = null)
     {
-        $this->stack = [];
         $this->limit = $limit;
+        $this->queue = [];
     }
 
     /**
@@ -63,25 +63,5 @@ class Queue extends Stack
         }
 
         return array_pop($this->queue);
-    }
-
-    /**
-     * Get top element from stack
-     *
-     * @return mixed
-     */
-    public function top()
-    {
-        return current($this->queue);
-    }
-
-    /**
-     * Check queue empty
-     *
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return empty($this->queue);
     }
 }
