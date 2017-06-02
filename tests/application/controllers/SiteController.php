@@ -213,6 +213,32 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Rating widget action
+     *
+     * @return string
+     *
+     * @author Donii Sergii <doniysa@gmail.com>
+     */
+    public function actionRating() {
+        return $this->render('widgets/rating', [
+            'model' => new WidgetModel()
+        ]);
+    }
+
+    /**
+     * Rating widget action
+     *
+     * @return string
+     *
+     * @author Donii Sergii <doniysa@gmail.com>
+     */
+    public function actionRange() {
+        return $this->render('widgets/range', [
+            'model' => new WidgetModel()
+        ]);
+    }
+
     public function actionTest()
     {
         return $this->render('test', [

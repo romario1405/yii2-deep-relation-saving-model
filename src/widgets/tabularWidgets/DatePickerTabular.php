@@ -18,6 +18,9 @@ use yii\web\JsExpression;
  */
 class DatePickerTabular extends BaseWidget implements ITabularWidget
 {
+    /**
+     * @inheritdoc
+     */
     public $assetsBundles = 'sonrac\tabularWidgets\assets\DateTimePickerAssets';
 
     /**
@@ -27,15 +30,13 @@ class DatePickerTabular extends BaseWidget implements ITabularWidget
     {
         parent::init();
 
-        if (!isset($this->fieldOptions['options'])) {
-            $this->fieldOptions['options'] = [];
-        }
+        $this->setNotExistsOption('options', [], 'fieldOptions');
 
         if (!isset($this->fieldOptions['options']['style'])) {
             $this->fieldOptions['options']['style'] = '';
         }
 
-        $this->fieldOptions['options']['style'] .= ';position:relative';
+        $this->fieldOptions['options']['style'] .= (empty($this->fieldOptions['options']['style']) ? '' : ';') . 'position:relative';
     }
 
     /**
@@ -43,9 +44,7 @@ class DatePickerTabular extends BaseWidget implements ITabularWidget
      */
     public function getInitScript(): string
     {
-        if (!isset($this->pluginOptions['format'])) {
-            $this->pluginOptions['format'] = 'YYYY-mm-DD';
-        }
+        $this->setNotExistsOption('format', 'YYYY-mm-DD');
 
         return (new JsExpression("$('#' + id).datetimepicker(options);"));
     }

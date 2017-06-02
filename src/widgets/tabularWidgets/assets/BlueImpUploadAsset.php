@@ -8,23 +8,17 @@ namespace sonrac\tabularWidgets\assets;
 use yii\web\AssetBundle;
 
 /**
- * Class MomentAsset
+ * Class BlueImpUploadAsset
  *
  * @package sonrac\tabularWidgets\assets
  *
  * @author  Donii Sergii <doniysa@gmail.com>
  */
-class MomentAsset extends AssetBundle
+class BlueImpUploadAsset extends AssetBundle
 {
-    /**
-     * @inheritdoc
-     */
-    public $sourcePath = '@bower/moment';
+    public $sourcePath = '@bower/plupload';
 
-    /**
-     * @inheritdoc
-     */
-    public $js = [
-        'min/moment.min.js',
+    public $css = [
+
     ];
 }

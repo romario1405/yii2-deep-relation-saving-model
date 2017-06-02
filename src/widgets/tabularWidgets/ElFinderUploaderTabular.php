@@ -14,4 +14,13 @@ namespace sonrac\tabularWidgets;
  */
 class ElFinderUploaderTabular extends BaseWidget implements ITabularWidget
 {
+    public $assetsBundles = 'mihaildev\elfinder\AssetsCallBack';
+    /**
+     * @inheritdoc
+     */
+    public function getInitScript(): string
+    {
+
+    }
+
 }

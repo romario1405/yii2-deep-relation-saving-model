@@ -12,7 +12,10 @@
     "bower-asset/jquery-bar-rating": "1.2.2",
     "bower-asset/select2": "4.0.3",
     "bower-asset/eonasdan-bootstrap-datetimepicker": "4.17.47",
-    "yiisoft/yii2-imagine": "2.*"
+    "bower-asset/bootstrap-fileinput": "^4.4.1",
+    "bower-asset/ion.rangeSlider": "^2.1.7",
+    "yiisoft/yii2-imagine": "2.*",
+    "mihaildev/yii2-elfinder": "^1.2"
   },
   "require-dev": {
     "codeception/verify": "~0.3.3",
@@ -35,6 +38,27 @@
   "config": {
     "fxp-asset": {
       "ignore-files": {
+        "bower-asset/ion.rangeSlider": [
+          "_tmp",
+          ".*",
+          "*.json",
+          "*.md"
+        ],
+        "bower-asset/bootstrap-fileinput": [
+          ".*",
+          "*.md",
+          "*.html",
+          "examples",
+          "nuget",
+          "sass",
+          "*.json"
+        ],
+        "bower-asset/plupload": [
+          ".*",
+          "license.txt",
+          "readme.md",
+          "*.json"
+        ],
         "bower-asset/select2": [
           "*.md",
           "Gruntfile.js",

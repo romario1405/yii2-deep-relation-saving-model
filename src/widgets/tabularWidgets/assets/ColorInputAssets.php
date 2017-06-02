@@ -16,16 +16,28 @@ use yii\web\AssetBundle;
  */
 class ColorInputAssets extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public $sourcePath = '@bower/jquery-colorpicker';
 
+    /**
+     * @inheritdoc
+     */
     public $js = [
         'colorpicker.min.js',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public $css = [
         'css/colorpicker.min.css',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public $depends = [
         'yii\web\JqueryAsset',
     ];

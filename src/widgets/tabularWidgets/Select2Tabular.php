@@ -26,6 +26,9 @@ class Select2Tabular extends BaseWidget implements ITabularWidget
      */
     public $data;
 
+    /**
+     * @inheritdoc
+     */
     public $assetsBundles = 'sonrac\tabularWidgets\assets\Select2Asset';
 
     /**
@@ -45,6 +48,4 @@ class Select2Tabular extends BaseWidget implements ITabularWidget
             'id' => $this->id,
         ]));
     }
-
-
 }

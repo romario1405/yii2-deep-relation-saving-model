@@ -16,6 +16,9 @@ use yii\web\JsExpression;
  */
 class TinyMCETabular extends BaseWidget implements ITabularWidget
 {
+    /**
+     * @inheritdoc
+     */
     public $assetsBundles = 'sonrac\tabularWidgets\assets\TinyMCEAsset';
 
     public function getInitScript(): string

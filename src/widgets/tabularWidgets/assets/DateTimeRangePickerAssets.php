@@ -10,7 +10,7 @@ use yii\web\AssetBundle;
 /**
  * Class DateTimeRangePickerAssets
  *
- * @see http://www.daterangepicker.com/ for more info
+ * @see     http://www.daterangepicker.com/ for more info
  *
  * @package sonrac\tabularWidgets\assets
  *
@@ -18,16 +18,28 @@ use yii\web\AssetBundle;
  */
 class DateTimeRangePickerAssets extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public $sourcePath = '@bower/bootstrap-daterangepicker';
 
+    /**
+     * @inheritdoc
+     */
     public $js = [
         'daterangepicker.js',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public $css = [
         'daterangepicker.css',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public $depends = [
         'yii\web\JqueryAsset',
         'sonrac\tabularWidgets\assets\MomentAsset',

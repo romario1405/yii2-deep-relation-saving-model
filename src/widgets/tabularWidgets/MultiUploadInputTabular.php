@@ -12,10 +12,12 @@ namespace sonrac\tabularWidgets;
  *
  * @author  Donii Sergii <doniysa@gmail.com>
  */
-class UploadInputTabular extends BaseWidget implements ITabularWidget
+class MultiUploadInputTabular extends BaseWidget implements ITabularWidget
 {
-
-    public function getClientScripts(): array
+    /**
+     * @inheritdoc
+     */
+    public function getInitScript(): string
     {
 
     }

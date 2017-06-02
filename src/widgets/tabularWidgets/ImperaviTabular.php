@@ -15,9 +15,4 @@ namespace sonrac\tabularWidgets;
 class ImperaviTabular extends BaseWidget implements ITabularWidget
 {
 
-    public function getClientScripts(): array
-    {
-
-    }
-
 }

@@ -15,34 +15,26 @@ use yii\web\AssetBundle;
  *
  * @author  Donii Sergii <doniysa@gmail.com>
  */
-class RatingAsset extends AssetBundle
+class RangeInputAsset extends AssetBundle
 {
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@bower/jquery-bar-rating/dist';
+    public $sourcePath = '@bower/ion.rangeslider';
 
     /**
      * @inheritdoc
      */
     public $js = [
-        'jquery.barrating.min.js',
+        'js/ion.rangeSlider.min.js',
     ];
 
     /**
      * @inheritdoc
      */
     public $css = [
+        'css/ion.rangeSlider.css',
     ];
-
-    /**
-     * CSS theme
-     *
-     * @var string
-     *
-     * @author Donii Sergii <doniysa@gmail.com>
-     */
-    public $theme = 'fontawesome-stars';
 
     /**
      * @inheritdoc
@@ -52,17 +44,24 @@ class RatingAsset extends AssetBundle
     ];
 
     /**
-     * @inheritdoc
+     * Skin
+     *
+     * @var string
      *
      * @author Donii Sergii <doniysa@gmail.com>
      */
+    public $skin = 'Nice';
+
     public function init()
     {
         parent::init();
 
-        $cssFile = "themes/{$this->theme}.css";
-        if ($this->theme && is_file(Yii::getAlias($this->sourcePath . '/' . $cssFile))) {
-            $this->css[] = $cssFile;
+        if ($this->skin) {
+            $path = "css/ion.rangeSlider.skin" . ucfirst($this->skin) . ".css";
+
+            if (is_file(Yii::getAlias($this->sourcePath . '/' . $path))) {
+                $this->css[] = $path;
+            }
         }
     }
 }

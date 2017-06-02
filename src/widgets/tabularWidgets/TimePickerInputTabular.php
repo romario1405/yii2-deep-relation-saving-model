@@ -21,9 +21,7 @@ class TimePickerInputTabular extends DatePickerTabular implements ITabularWidget
     {
         parent::init();
 
-        if (!isset($this->pluginOptions['format'])) {
-            $this->pluginOptions['format'] = 'LT';
-        }
+        $this->setNotExistsOption('format', 'LT');
     }
 
 }

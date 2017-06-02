@@ -93,7 +93,24 @@ abstract class BaseWidget extends Widget implements ITabularWidget
      * @author Donii Sergii <doniysa@gmail.com>
      */
     protected $_attribute = null;
+
+    /**
+     * Field type
+     *
+     * @var string
+     *
+     * @author Donii Sergii <doniysa@gmail.com>
+     */
     protected $fieldType = 'textInput';
+
+    /**
+     * Asset options init
+     *
+     * @var array
+     *
+     * @author Donii Sergii <doniysa@gmail.com>
+     */
+    protected $assetOptions = [];
 
     /**
      * @inheritdoc
@@ -112,6 +129,9 @@ abstract class BaseWidget extends Widget implements ITabularWidget
         $this->assetsBundles = is_array($this->assetsBundles) ? $this->assetsBundles : [$this->assetsBundles];
 
         foreach ($this->assetsBundles as $assetsBundle) {
+            /** @var yii\web\AssetBundle $bundle */
+            $bundle = (new $assetsBundle($this->assetOptions));
+            $bundle::register(Yii::$app->controller->view);
             Yii::$app->controller->view->registerAssetBundle($assetsBundle);
         }
     }
@@ -220,5 +240,21 @@ abstract class BaseWidget extends Widget implements ITabularWidget
     public function setModel(\yii\db\ActiveRecord $model)
     {
         $this->_model = $model;
+    }
+
+    /**
+     * Set not exists array option in class property $property
+     *
+     * @param string $name     Index name
+     * @param mixed  $value    Set value if null
+     * @param string $property Class property name
+     *
+     * @author Donii Sergii <doniysa@gmail.com>
+     */
+    protected function setNotExistsOption($name, $value, $property = 'pluginOptions')
+    {
+        if (!isset($this->{$property}[$name])) {
+            $this->{$property}[$name] = $value;
+        }
     }
 }

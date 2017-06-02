@@ -16,13 +16,22 @@ use yii\web\AssetBundle;
  */
 class TinyMCEAsset extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public $sourcePath = '@bower/tinymce';
 
+    /**
+     * @inheritdoc
+     */
     public $js = [
         'js/tinymce/tinymce.min.js',
         'js/tinymce/jquery.tinymce.min.js',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public $depends = [
         'yii\web\JqueryAsset',
     ];

@@ -18,6 +18,9 @@ use yii\web\JsExpression;
  */
 class DateRangePickerTabular extends BaseWidget implements ITabularWidget
 {
+    /**
+     * @inheritdoc
+     */
     public $assetsBundles = 'sonrac\tabularWidgets\assets\DateTimeRangePickerAssets';
 
     /**
