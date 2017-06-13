@@ -181,7 +181,7 @@ class SiteController extends Controller
      *
      * @author Donii Sergii <doniysa@gmail.com>
      */
-    public function actionDetepicker() {
+    public function actionDatepicker() {
         return $this->render('widgets/datepicker', [
             'model' => new WidgetModel(),
         ]);
