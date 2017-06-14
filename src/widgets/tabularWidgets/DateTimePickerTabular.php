@@ -23,6 +23,6 @@ class DateTimePickerTabular extends DatePickerTabular implements ITabularWidget
     {
         parent::init();
 
-        $this->setNotExistsOption('format', 'YYYY-mm-DD HH:MM:ss');
+        $this->setNotExistsOption('format', 'YYYY-MM-DD HH:mm:ss');
     }
 }

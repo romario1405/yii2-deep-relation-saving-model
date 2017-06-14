@@ -12,24 +12,18 @@ class DatepickerWidgetCest
 
     public function setDateTest(AcceptanceTester $i)
     {
-        $i->canSeeElement('input[name="WidgetModel[test]"]');
-        $i->canSeeElement('input[name="WidgetModel[text]"]');
-        $i->canSeeElement('input[name="WidgetModel[textNext]"]');
+        $this->checkField($i,'input[name="WidgetModel[test]"]');
+        $this->checkField($i,'input[name="WidgetModel[text]"]');
+        $this->checkField($i,'input[name="WidgetModel[textNext]"]');
+    }
 
-        $i->click('input[name="WidgetModel[test]"]');
+    protected function checkField(AcceptanceTester $tester, $selector)
+    {
+        $tester->canSeeElement($selector);
+        $tester->click($selector);
         sleep(1);
-        $i->canSeeElement('div .bootstrap-datetimepicker-widget');
+        $tester->canSeeElement('div .bootstrap-datetimepicker-widget');
         sleep(1);
-        $i->dontSeeInField('input[name="WidgetModel[test]"]', '');
-        $i->click('input[name="WidgetModel[text]"]');
-        sleep(1);
-        $i->canSeeElement('div .bootstrap-datetimepicker-widget');
-        sleep(1);
-        $i->dontSeeInField('input[name="WidgetModel[text]"]', '');
-        $i->click('input[name="WidgetModel[textNext]"]');
-        sleep(1);
-        $i->canSeeElement('div .bootstrap-datetimepicker-widget');
-        sleep(1);
-        $i->dontSeeInField('input[name="WidgetModel[textNext]"]', '');
+        $tester->seeInField('input[name="WidgetModel[test]"]', '');
     }
 }

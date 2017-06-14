@@ -44,7 +44,7 @@ class DatePickerTabular extends BaseWidget implements ITabularWidget
      */
     public function getInitScript(): string
     {
-        $this->setNotExistsOption('format', 'YYYY-mm-DD');
+        $this->setNotExistsOption('format', 'YYYY-MM-DD');
 
         return (new JsExpression("$('#' + id).datetimepicker(options);"));
     }
