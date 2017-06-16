@@ -5,4 +5,4 @@
 \sonrac\relations\tests\application\boot\StartYii2Application::getInstance()->start();
 \sonrac\relations\tests\application\boot\StartSelenium::getInstance()->stop();
 \sonrac\relations\tests\application\boot\StartSelenium::getInstance()->start();
-sleep(4);
+sleep(5);
